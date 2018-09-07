@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import native, { platform, initOc } from './native'
+  import native, { platform, initOc } from './native-esm'
 
   export default {
     methods: {

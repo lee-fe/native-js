@@ -42,7 +42,6 @@
       return initOc.then(function (bridge) {
         return new Promise(function (resolve) {
           bridge.callHandler(name, {name: '张三'}, function (response) {
-            console.log(response)
             resolve(response)
           })
         })

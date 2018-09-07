@@ -38,18 +38,21 @@
         resolve(bridge)
       })
     })
-    handler = function (name) {
+    handler = function (name, str) {
+      str = str || ''
       return initOc.then(function (bridge) {
         return new Promise(function (resolve) {
-          bridge.callHandler(name, {name: '张三'}, function (response) {
+          bridge.callHandler(name, str, function (response) {
             resolve(response)
           })
         })
       })
     }
   } else {
-    handler = function (name) {
-      return Promise.resolve(window.android[name]())
+    handler = function (name, str) {
+      var fn = window.android[name]
+      var res = str ? fn(str) : fn()
+      return Promise.resolve(res)
     }
   }
   window.native = {
@@ -61,6 +64,9 @@
     },
     getUserInfo() {
       return handler('getUserInfo')
+    },
+    showToast(str) {
+      return handler('showToast', str)
     }
   }
 })(window)

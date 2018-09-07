@@ -45,10 +45,11 @@ if (platform === 'ios') {
       resolve(bridge)
     })
   })
-  handler = (name) => {
+  handler = (name, str) => {
+    str = str || ''
     return initOc.then(bridge => {
       return new Promise(resolve => {
-        bridge.callHandler(name, {name: '张三'}, function (response) {
+        bridge.callHandler(name, str, function (response) {
           console.log(response)
           resolve(response)
         })
@@ -56,8 +57,11 @@ if (platform === 'ios') {
     })
   }
 } else {
-  const {android} = window
-  handler = (name) => Promise.resolve(android[name]())
+  handler = (name, str) => {
+    let fn = window.android[name]
+    let res = str ? fn(str) : fn()
+    return Promise.resolve(res)
+  }
 }
 
 export { platform, handler, initOc }
@@ -68,6 +72,9 @@ export default {
   },
   getUserInfo() {
     return handler('getUserInfo')
+  },
+  showToast(str) {
+    return handler('showToast', str)
   }
 }
 

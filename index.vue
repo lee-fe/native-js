@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import native, { platform, initOc } from './src/native-esm'
+  import native, {platform, initOc} from './src/native-esm'
 
   export default {
     methods: {
@@ -24,6 +24,9 @@
         native.getUserInfo().then(res => {
           console.log(`用户信息是${res}`)
         })
+      },
+      showToast(str) {
+        native.showToast(str)
       },
       // 刷新页面(留给native调用)
       refresh() {

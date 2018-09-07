@@ -38,8 +38,8 @@
 
       //处理 oc 调用 js -->
       if (platform === 'ios') {
-        initOc.then(nexus => {
-          nexus.registerHandler('refresh', function (data, responseCallback) {
+        initOc.then(bridge => {
+          bridge.registerHandler('refresh', function (data, responseCallback) {
             //处理oc给的传参
             alert('oc请求js  传值参数是：' + data)
             let responseData = {'result': 'handle success'}

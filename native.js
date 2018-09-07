@@ -38,18 +38,17 @@ let platform = (function () {
  * 原生调用js的方法，只能把方法挂载到全局window上
  *
  */
-let initOc = null, nexus = null, handler = null
+let initOc = null, handler = null
 if (platform === 'ios') {
-  initOc = new Promise((resolve) => {
+  initOc = new Promise(resolve => {
     setupWebViewJavascriptBridge(function (bridge) {
-      nexus = bridge
-      resolve(nexus)
+      resolve(bridge)
     })
   })
   handler = (name) => {
-    return initOc.then(() => {
-      return new Promise((resolve) => {
-        nexus.callHandler(name, {name: '张三'}, function (response) {
+    return initOc.then(bridge => {
+      return new Promise(resolve => {
+        bridge.callHandler(name, {name: '张三'}, function (response) {
           console.log(response)
           resolve(response)
         })

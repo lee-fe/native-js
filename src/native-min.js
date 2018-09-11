@@ -31,14 +31,14 @@
     }
   })()
 
-  var initOc = null, handler = null
+  var initOc = null, nexus = null
   if (platform === 'ios') {
     initOc = new Promise(function (resolve) {
       setupWebViewJavascriptBridge(function (bridge) {
         resolve(bridge)
       })
     })
-    handler = function (name, str) {
+    nexus = function (name, str) {
       str = str || ''
       return initOc.then(function (bridge) {
         return new Promise(function (resolve) {
@@ -49,7 +49,7 @@
       })
     }
   } else {
-    handler = function (name, str) {
+    nexus = function (name, str) {
       var fn = window.android[name]
       var res = str ? fn(str) : fn()
       return Promise.resolve(res)
@@ -57,16 +57,16 @@
   }
   window.native = {
     platform,
-    handler,
+    nexus,
     initOc,
     isLogin() {
-      return handler('isLogin')
+      return nexus('isLogin')
     },
     getUserInfo() {
-      return handler('getUserInfo')
+      return nexus('getUserInfo')
     },
     showToast(str) {
-      return handler('showToast', str)
+      return nexus('showToast', str)
     }
   }
 })(window)

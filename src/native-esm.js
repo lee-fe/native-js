@@ -32,20 +32,20 @@ let platform = (function () {
 /**
  *
  * oc就是object-c(ios平台的开发语言)
- * initOc用于初始化oc和js之间的bridge，是一个promise，then里面可以获取到nexus，也就是bridge
- * handler用于把js调用oc的异步回调方法的结果通过promise返回，参数是oc的方法名
+ * initOc用于初始化oc和js之间的bridge，是一个promise对象，bridge当then的参数传递出去
+ * nexus用于把js调用原生的方法的结果通过promise返回，第一个参数是方法名，后续参数是传递给原生方法的参数
  * 如果需要oc调用js的方法，可以import initOc，通过promise来调用
  * 原生调用js的方法，只能把方法挂载到全局window上
  *
  */
-let initOc = null, handler = null
+let initOc = null, nexus = null
 if (platform === 'ios') {
   initOc = new Promise(resolve => {
     setupWebViewJavascriptBridge(function (bridge) {
       resolve(bridge)
     })
   })
-  handler = (name, str) => {
+  nexus = (name, str) => {
     str = str || ''
     return initOc.then(bridge => {
       return new Promise(resolve => {
@@ -57,24 +57,24 @@ if (platform === 'ios') {
     })
   }
 } else {
-  handler = (name, str) => {
+  nexus = (name, str) => {
     let fn = window.android[name]
     let res = str ? fn(str) : fn()
     return Promise.resolve(res)
   }
 }
 
-export { platform, handler, initOc }
+export { platform, nexus, initOc }
 
 export default {
   isLogin() {
-    return handler('isLogin')
+    return nexus('isLogin')
   },
   getUserInfo() {
-    return handler('getUserInfo')
+    return nexus('getUserInfo')
   },
   showToast(str) {
-    return handler('showToast', str)
+    return nexus('showToast', str)
   }
 }
 
